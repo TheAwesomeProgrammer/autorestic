@@ -9,6 +9,7 @@ CONFIG_DIR = os.getenv('CRON_CONFIG_DIR')
 BACKEND_CONFIGS_PATH = os.getenv('BACKEND_CONFIGS_PATH')
 BACKUP_SCRIPT_NAME = os.getenv('BACKUP_SCRIPT_NAME')
 BACKUP_PATH = os.getenv('BACKUP_PATH')
+CRON_SCHEDULE = os.getenv('CRON_SCHEDULE')
 
 def create_backend(backend_config ,encryption_key, backup_path):
     backend_template = Template("""
@@ -59,6 +60,8 @@ for backend_config in backend_configs["configs"]:
    config_content += "\n    - " + backend_config['server_name']
    
 config_content += create_hooks(BACKUP_SCRIPT_NAME)
+
+config_content += "    cron: " + CRON_SCHEDULE
   
 config_content += "\n\nbackends:"
 
