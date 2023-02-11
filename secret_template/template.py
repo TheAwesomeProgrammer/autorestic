@@ -49,9 +49,9 @@ locations:
       forget:
         keep-last: 5 # always keep at least 5 snapshots
         keep-daily: 7 # keep74 last daily snapshots
-        keep-weekly: 1 # keep 1 last weekly snapshots
+        keep-weekly: 4 # keep 1 last weekly snapshots
         keep-monthly: 12 # keep 12 last monthly snapshots
-        keep-yearly: 5 # keep 5 last yearly snapshots
+        keep-yearly: 10 # keep 5 last yearly snapshots
         keep-within: '14d' # keep snapshots from the last 14 days
     from: /data
     to:"""
