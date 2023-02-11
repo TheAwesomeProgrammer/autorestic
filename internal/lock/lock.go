@@ -5,8 +5,8 @@ import (
 	"path"
 	"sync"
 
-	"github.com/cupcakearmy/autorestic/internal/colors"
-	"github.com/cupcakearmy/autorestic/internal/flags"
+	"github.com/TheAwesomeProgrammer/autorestic/internal/colors"
+	"github.com/TheAwesomeProgrammer/autorestic/internal/flags"
 	"github.com/spf13/viper"
 )
 

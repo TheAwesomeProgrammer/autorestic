@@ -6,15 +6,19 @@ RUN go mod download
 COPY . .
 RUN go build
 
-FROM restic/restic:0.15.0
+FROM restic/restic:0.15.1
 RUN apk add --no-cache rclone bash
 COPY --from=builder /app/autorestic /usr/bin/autorestic
 COPY entrypoint.sh /entrypoint.sh
+COPY secret_template/template.py /template.py
 COPY crond.sh /crond.sh
-RUN chmod +x /entrypoint.sh /crond.sh
+RUN chmod +x /entrypoint.sh /crond.sh /template.py
+
+RUN apk add --no-cache python3
 # show autorestic cron logs in docker
 RUN ln -sf /proc/1/fd/1 /var/log/autorestic-cron.log
 # run autorestic-cron every minute
 RUN echo -e "*/1 * * * * bash /crond.sh" >> /etc/crontabs/root
 
-CMD [ "/entrypoint.sh" ]
+ENTRYPOINT []
+CMD /entrypoint.sh

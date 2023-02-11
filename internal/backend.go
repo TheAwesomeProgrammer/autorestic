@@ -8,8 +8,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/cupcakearmy/autorestic/internal/colors"
-	"github.com/cupcakearmy/autorestic/internal/flags"
+	"github.com/TheAwesomeProgrammer/autorestic/internal/colors"
+	"github.com/TheAwesomeProgrammer/autorestic/internal/flags"
 )
 
 type BackendRest struct {

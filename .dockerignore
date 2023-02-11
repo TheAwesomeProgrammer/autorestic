@@ -5,3 +5,4 @@
 !internal
 !go.*
 !/*.sh
+!secret_template

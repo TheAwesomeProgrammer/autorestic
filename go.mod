@@ -1,4 +1,4 @@
-module github.com/cupcakearmy/autorestic
+module github.com/TheAwesomeProgrammer/autorestic
 
 go 1.18
 
