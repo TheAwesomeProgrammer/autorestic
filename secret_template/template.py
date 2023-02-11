@@ -8,8 +8,9 @@ from string import Template
 CONFIG_DIR = os.getenv('CRON_CONFIG_DIR')
 BACKEND_CONFIGS_PATH = os.getenv('BACKEND_CONFIGS_PATH')
 BACKUP_SCRIPT_NAME = os.getenv('BACKUP_SCRIPT_NAME')
+BACKUP_PATH = os.getenv('BACKUP_PATH')
 
-def create_backend(backend_config ,encryption_key):
+def create_backend(backend_config ,encryption_key, backup_path):
     backend_template = Template("""
   $server_name:
     type: rest
@@ -20,7 +21,7 @@ def create_backend(backend_config ,encryption_key):
       password:  ${password}""")
         
     return backend_template.substitute(server_name=backend_config['server_name'], server_path=backend_config['server_path'],
-                                       backup_path=backend_config['backup_path'], username=backend_config['username'], password=backend_config['password'], encryption_key=encryption_key)
+                                       backup_path=backup_path, username=backend_config['username'], password=backend_config['password'], encryption_key=encryption_key)
     
 def create_hooks(backup_script_name):
     hooks_template = Template("""
@@ -62,7 +63,7 @@ config_content += create_hooks(BACKUP_SCRIPT_NAME)
 config_content += "\n\nbackends:"
 
 for backend_config in backend_configs["configs"]:
-  config_content += create_backend(backend_config, backend_configs["encryptionKey"])
+  config_content += create_backend(backend_config, backend_configs["encryptionKey"], BACKUP_PATH)
 
 
 os.makedirs(os.path.dirname(path_to_config_file), exist_ok=True)
