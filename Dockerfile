@@ -8,7 +8,7 @@ COPY . .
 RUN go build
 
 FROM restic/restic:0.15.1
-RUN apk add --no-cache rclone bash
+RUN apk add --no-cache rclone bash curl
 COPY --from=builder /app/autorestic /usr/bin/autorestic
 COPY entrypoint.sh /entrypoint.sh
 COPY secret_template/template.py /template.py
