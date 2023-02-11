@@ -40,7 +40,7 @@ path_to_config_file = CONFIG_DIR
 with open(BACKEND_CONFIGS_PATH, 'r') as f:
   backend_configs = json.load(f)
 
-config_content = """version: 2
+config_content = """version: 3
 
 locations:
   home:
