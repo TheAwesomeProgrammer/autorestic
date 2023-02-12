@@ -8,8 +8,11 @@ from string import Template
 CONFIG_DIR = os.getenv('CRON_CONFIG_DIR')
 BACKEND_CONFIGS_PATH = os.getenv('BACKEND_CONFIGS_PATH')
 BACKUP_SCRIPT_NAME = os.getenv('BACKUP_SCRIPT_NAME')
+BEFORE_BACKUP_SCRIPT_NAME = os.getenv('BEFORE_BACKUP_SCRIPT_NAME')
 BACKUP_PATH = os.getenv('BACKUP_PATH')
 CRON_SCHEDULE = os.getenv('CRON_SCHEDULE')
+
+DefaultScript = "echo 'nothing'"
 
 def create_backend(backend_config ,encryption_key, backup_path):
     backend_template = Template("""
@@ -24,16 +27,18 @@ def create_backend(backend_config ,encryption_key, backup_path):
     return backend_template.substitute(server_name=backend_config['server_name'], server_path=backend_config['server_path'],
                                        backup_path=backup_path, username=backend_config['username'], password=backend_config['password'], encryption_key=encryption_key)
     
-def create_hooks(backup_script_name):
+def create_hooks(backup_script_name, before_backup_script_name):
     hooks_template = Template("""
     hooks:
       backup:
+        before:
+          - ${before_backup_script_name}
         success:
           - ${backup_script_name} 0
         failure:
           - ${backup_script_name} -1""")
         
-    return hooks_template.substitute(backup_script_name=backup_script_name)
+    return hooks_template.substitute(backup_script_name=backup_script_name, before_backup_script_name=before_backup_script_name)
 
 
 path_to_config_file = CONFIG_DIR
@@ -59,7 +64,7 @@ locations:
 for backend_config in backend_configs["configs"]:
    config_content += "\n    - " + backend_config['server_name']
    
-config_content += create_hooks(BACKUP_SCRIPT_NAME)
+config_content += create_hooks(BACKUP_SCRIPT_NAME or DefaultScript, BEFORE_BACKUP_SCRIPT_NAME or DefaultScript)
 
 config_content += "\n    cron: '" + CRON_SCHEDULE + "'"
   
