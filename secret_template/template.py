@@ -32,6 +32,7 @@ def create_hooks(backup_script_name, before_backup_script_name):
     hooks:
       backup:
         before:
+          - python3 /database.py
           - ${before_backup_script_name}
         success:
           - ${backup_script_name} 0
