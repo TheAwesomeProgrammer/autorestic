@@ -31,7 +31,7 @@ Autorestic is a wrapper around the amazing [restic](https://restic.net/). While 
 
 - YAML config files, no CLI
 - Incremental -> Minimal space is used
-- Backup locations to multiple backends
+- Backup locations to multiple backends.
 - Snapshot policies and pruning
 - Fully encrypted
 - Pre/After hooks.
