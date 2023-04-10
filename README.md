@@ -35,7 +35,7 @@ Autorestic is a wrapper around the amazing [restic](https://restic.net/). While 
 - Snapshot policies and pruning
 - Fully encrypted
 - Pre/After hooks
-- Exclude pattern/files
+- Exclude pattern/files.
 - Cron jobs for automatic backup
 - Backup & Restore docker volume
 - Generated completions for `[bash|zsh|fish|powershell]`
