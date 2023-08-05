@@ -1,9 +1,9 @@
 import os
 import json 
 from string import Template
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
-load_dotenv()
+#load_dotenv()
 
 CONFIG_DIR = os.getenv('CRON_CONFIG_DIR')
 BACKEND_CONFIGS_PATH = os.getenv('BACKEND_CONFIGS_PATH')
