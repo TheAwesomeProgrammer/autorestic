@@ -15,7 +15,7 @@ COPY secret_template/template.py /template.py
 COPY secret_template/database.py /database.py
 COPY crond.sh /crond.sh
 RUN chmod +x /entrypoint.sh /crond.sh /template.py /database.py
-RUN apk add --no-cache python3 py3-pip postgresql-client
+RUN apk add --no-cache python3 py3-pip postgresql-client mariadb-client
 RUN pip3 install sh
 # show autorestic cron logs in docker
 RUN ln -sf /proc/1/fd/1 /var/log/autorestic-cron.log
