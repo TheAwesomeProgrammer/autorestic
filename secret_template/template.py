@@ -22,6 +22,8 @@ def create_backend(backend_config ,encryption_key, backup_path):
     return create_s3_backend(backend_config, encryption_key, backup_path)
   elif type == 'rest':
     return create_rest_backend(backend_config, encryption_key, backup_path)
+  elif type == 'sftp':
+    return create_sftp_backend(backend_config, encryption_key, backup_path)
   
 
 def create_rest_backend(backend_config ,encryption_key, backup_path):
@@ -49,6 +51,17 @@ def create_s3_backend(backend_config ,encryption_key, backup_path):
         
     return backend_template.substitute(server_name=backend_config['server_name'], server_path=backend_config['server_path'],
                                        backup_path=backup_path, s3_key_id=backend_config['s3_key_id'], s3_secret_key=backend_config['s3_secret_key'], encryption_key=encryption_key)
+    
+    
+def create_sftp_backend(backend_config ,encryption_key, backup_path):
+    backend_template = Template("""
+  $server_name:
+    type: sftp
+    path: '${server_path}:/backup/${backup_path}'
+    key: '${encryption_key}'""")
+        
+    return backend_template.substitute(server_name=backend_config['server_name'], server_path=backend_config['server_path'],
+                                       backup_path=backup_path, encryption_key=encryption_key)
     
 def create_hooks(backup_script_name, before_backup_script_name):
     hooks_template = Template("""
