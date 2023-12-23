@@ -1,4 +1,5 @@
 #!/bin/sh
+python3 /template.py
 autorestic check -c $CRON_CONFIG_DIR
 autorestic $AUTORESTIC_INITIAL_ARGS
 if [ -n "$CRON_CONFIG_DIR" ]
