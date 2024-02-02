@@ -5,7 +5,12 @@ from string import Template
 
 #load_dotenv()
 
+
+
 CONFIG_DIR = os.getenv('CRON_CONFIG_DIR')
+
+if os.getenv('CONFIG_DIR'):
+  CONFIG_DIR = os.getenv('CONFIG_DIR')
 BACKEND_CONFIGS_PATH = os.getenv('BACKEND_CONFIGS_PATH')
 BACKUP_SCRIPT_NAME = os.getenv('BACKUP_SCRIPT_NAME')
 BEFORE_BACKUP_SCRIPT_NAME = os.getenv('BEFORE_BACKUP_SCRIPT_NAME')
