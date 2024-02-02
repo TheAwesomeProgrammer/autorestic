@@ -103,7 +103,8 @@ for backend_config in backend_configs["configs"]:
    
 config_content += create_hooks(BACKUP_SCRIPT_NAME or DefaultScript, BEFORE_BACKUP_SCRIPT_NAME or DefaultScript)
 
-config_content += "\n    cron: '" + CRON_SCHEDULE + "'"
+if CRON_SCHEDULE:
+  config_content += "\n    cron: '" + CRON_SCHEDULE + "'"
   
 config_content += "\n\nbackends:"
 
