@@ -36,6 +36,10 @@ if DATABASE_TYPE == POSTGRES_TYPE:
     if DATABASE_BACKUP_TYPE == DUMP_BACKUP_TYPE:
         pg_dump('-h', host, '-U', DATABASE_USERNAME, DATABASE_NAME, _out='/data/database-dump/dump.sql', _env={"PGPASSWORD": DATABASE_PASSWORD})
     elif DATABASE_BACKUP_TYPE == ARCHIVE_BACKUP_TYPE:
-        subprocess.Popen(['pg_basebackup', '-D', '/data/database-basebackup' '-d', f'postgresql://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{host}'], shell=True)
+        process = subprocess.Popen([f'rm -rf /data/database-basebackup/*; pg_basebackup -D /data/database-basebackup -d postgresql://{DATABASE_USERNAME}:{DATABASE_PASSWORD}@{host}'], shell=True, stdout=subprocess.PIPE)
+        process.wait()
+        raise SystemExit(process.returncode)
 elif DATABASE_TYPE == MARIA_DB_TYPE:
-     subprocess.Popen(['mysqldump', '-u',DATABASE_USERNAME,'-p%s'%DATABASE_PASSWORD,DATABASE_NAME],shell=True)
+    process = subprocess.Popen(['mysqldump', '-u',DATABASE_USERNAME,'-p%s'%DATABASE_PASSWORD,DATABASE_NAME],shell=True)
+    process.wait()
+    raise SystemExit(process.returncode)
