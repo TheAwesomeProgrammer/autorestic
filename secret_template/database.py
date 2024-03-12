@@ -28,6 +28,7 @@ if DATABASE_HOST is not None:
 if DATABASE_TYPE is None:
     DATABASE_TYPE = POSTGRES_TYPE
 
+
 os.makedirs('/data/database-dump/', exist_ok=True)
 os.makedirs('/data/database-basebackup', exist_ok=True)
 
