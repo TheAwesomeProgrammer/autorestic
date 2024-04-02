@@ -1,0 +1,58 @@
+version: 3
+
+locations:
+  home:
+    forget: prune # Or only "yes" if you don't want to prune
+    options:
+      forget:
+        keep-last: 5 # always keep at least 5 snapshots
+        keep-daily: 7 # keep74 last daily snapshots
+        keep-weekly: 4 # keep 1 last weekly snapshots
+        keep-monthly: 12 # keep 12 last monthly snapshots
+        keep-yearly: 10 # keep 5 last yearly snapshots
+        keep-within: '14d' # keep snapshots from the last 14 days
+{% if HEALTH_CHECKS_URL %}
+    <<: *healthchecks
+{% endif %}
+    from: /data
+    to: 
+{% for backend_name in backend_names %}
+    - {{ backend_name }}
+{% endfor %}
+{% if BEFORE_BACKUP_SCRIPT_NAME or DATABASE_NAME or BACKUP_SCRIPT_NAME %}
+    hooks:
+      backup:
+        before:
+{% if DATABASE_NAME %}
+          - python3 /database.py
+{% endif %}
+{% if BEFORE_BACKUP_SCRIPT_NAME %}
+          - {{ BEFORE_BACKUP_SCRIPT_NAME }}
+{% endif %}
+{% if BACKUP_SCRIPT_NAME %}
+        success:
+          - {{ BACKUP_SCRIPT_NAME }} 0
+{% endif %}
+{% if BACKUP_SCRIPT_NAME %}
+        failure:
+          - {{ BACKUP_SCRIPT_NAME }} -1
+{% endif %}
+{% endif %}
+{% if CRON_SCHEDULE %}
+    cron: '{{ CRON_SCHEDULE }}'
+{% endif %}
+backends:
+{% for backend_config in backend_configs %}
+  {{ backend_config }}
+{% endfor %}
+{% if HEALTH_CHECKS_URL %}
+extras:
+  healthchecks: &healthchecks
+    hooks:
+      before:
+        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Starting backup for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}/start'
+      failure:
+        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Backup failed for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}/fail'
+      success:
+        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Backup successful for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}'
+{% endif %}
