@@ -3,9 +3,7 @@ import json
 from generate_backend import generate_backend
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from dotenv import load_dotenv
 
-load_dotenv()
 
 CONFIG_DIR = os.getenv('CRON_CONFIG_DIR')
 if os.getenv('CONFIG_DIR'):
