@@ -11,10 +11,8 @@ FROM restic/restic:0.15.1
 RUN apk add --no-cache rclone bash curl
 COPY --from=builder /app/autorestic /usr/bin/autorestic
 COPY entrypoint.sh /entrypoint.sh
-COPY secret_template/template.py /template.py
-COPY secret_template/database.py /database.py
 COPY secret_template /
-COPY scripts /scripts
+COPY scripts/ /scripts
 COPY crond.sh /crond.sh
 RUN chmod +x /entrypoint.sh /crond.sh /template.py /database.py
 RUN apk add --no-cache python3 py3-pip postgresql-client mariadb-client
