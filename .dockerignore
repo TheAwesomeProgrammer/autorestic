@@ -6,3 +6,4 @@
 !go.*
 !/*.sh
 !secret_template
+!scripts
