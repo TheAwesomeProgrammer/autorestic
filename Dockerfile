@@ -9,12 +9,13 @@ RUN go build
 
 FROM restic/restic:0.15.1
 RUN apk add --no-cache rclone bash curl
+RUN mkdir -p /scripts
 COPY --from=builder /app/autorestic /usr/bin/autorestic
 COPY entrypoint.sh /entrypoint.sh
 COPY secret_template /
 COPY scripts/ /scripts
 COPY crond.sh /crond.sh
-RUN chmod +x /entrypoint.sh /crond.sh /template.py /database.py
+RUN chmod +x /entrypoint.sh /crond.sh /template.py /database.py /scripts/backup-vault.sh /scripts/restore-vault.sh
 RUN apk add --no-cache python3 py3-pip postgresql-client mariadb-client
 RUN pip3 install sh Jinja2
 # show autorestic cron logs in docker
