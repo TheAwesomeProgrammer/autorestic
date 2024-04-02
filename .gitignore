@@ -11,3 +11,4 @@ autorestic
 data
 dist
 .env
+__pycache__
