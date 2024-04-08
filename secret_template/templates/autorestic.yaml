@@ -1,17 +1,5 @@
 version: 3
 
-{% if HEALTH_CHECKS_URL %}
-extras:
-  healthchecks: &healthchecks
-    hooks:
-      before:
-        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Starting backup for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}/start'
-      failure:
-        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Backup failed for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}/fail'
-      success:
-        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Backup successful for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}'
-{% endif %}
-
 locations:
   home:
     forget: prune # Or only "yes" if you don't want to prune
@@ -31,23 +19,38 @@ locations:
 {% for backend_name in backend_names %}
     - {{ backend_name }}
 {% endfor %}
-{% if BEFORE_BACKUP_SCRIPT_NAME or DATABASE_NAME or BACKUP_SCRIPT_NAME %}
+{% if BEFORE_BACKUP_SCRIPT_NAME or DATABASE_NAME or BACKUP_SCRIPT_NAME or HEALTH_CHECKS_URL %}
     hooks:
       backup:
+{% if BEFORE_BACKUP_SCRIPT_NAME or DATABASE_NAME or HEALTH_CHECKS_URL %}
         before:
+{% if HEALTH_CHECKS_URL %}
+        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Starting backup for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}/start'
+{% endif %}
 {% if DATABASE_NAME %}
           - python3 /database.py
 {% endif %}
 {% if BEFORE_BACKUP_SCRIPT_NAME %}
           - {{ BEFORE_BACKUP_SCRIPT_NAME }}
 {% endif %}
-{% if BACKUP_SCRIPT_NAME %}
+{% endif %}
+{% if BACKUP_SCRIPT_NAME or HEALTH_CHECKS_URL %}
         success:
+{% if BACKUP_SCRIPT_NAME %}
           - {{ BACKUP_SCRIPT_NAME }} 0
 {% endif %}
-{% if BACKUP_SCRIPT_NAME %}
+{% if HEALTH_CHECKS_URL %}
+        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Backup successful for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}'
+{% endif %}
+{% endif %}
+{% if BACKUP_SCRIPT_NAME or HEALTH_CHECKS_URL %}
         failure:
+{% if BACKUP_SCRIPT_NAME %}
           - {{ BACKUP_SCRIPT_NAME }} -1
+{% endif %}
+{% if HEALTH_CHECKS_URL %}
+          - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Backup failed for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}/fail'
+{% endif %}
 {% endif %}
 {% endif %}
 {% if CRON_SCHEDULE %}
