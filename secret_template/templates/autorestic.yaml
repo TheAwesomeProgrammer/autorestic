@@ -11,9 +11,6 @@ locations:
         keep-monthly: 12 # keep 12 last monthly snapshots
         keep-yearly: 10 # keep 5 last yearly snapshots
         keep-within: '14d' # keep snapshots from the last 14 days
-{% if HEALTH_CHECKS_URL %}
-    <<: *healthchecks
-{% endif %}
     from: /data
     to: 
 {% for backend_name in backend_names %}
