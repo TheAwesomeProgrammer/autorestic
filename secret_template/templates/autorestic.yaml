@@ -1,5 +1,17 @@
 version: 3
 
+{% if HEALTH_CHECKS_URL %}
+extras:
+  healthchecks: &healthchecks
+    hooks:
+      before:
+        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Starting backup for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}/start'
+      failure:
+        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Backup failed for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}/fail'
+      success:
+        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Backup successful for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}'
+{% endif %}
+
 locations:
   home:
     forget: prune # Or only "yes" if you don't want to prune
@@ -45,14 +57,3 @@ backends:
 {% for backend_config in backend_configs %}
   {{ backend_config }}
 {% endfor %}
-{% if HEALTH_CHECKS_URL %}
-extras:
-  healthchecks: &healthchecks
-    hooks:
-      before:
-        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Starting backup for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}/start'
-      failure:
-        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Backup failed for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}/fail'
-      success:
-        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Backup successful for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}'
-{% endif %}
