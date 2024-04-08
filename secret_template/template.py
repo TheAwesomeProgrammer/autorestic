@@ -48,4 +48,4 @@ config_file.write(rendered_autorestic_template)
 config_file.close()
 
 for backend_name in backend_names:
-  subprocess.Popen("autorestic exec -b " + backed_name + " -- unlock", shell=True)
+  subprocess.Popen("autorestic exec -b " + backend_name + " -- unlock", shell=True)
