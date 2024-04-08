@@ -2,7 +2,7 @@ import os
 import json 
 from generate_backend import generate_backend
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-
+import subprocess
 
 
 CONFIG_DIR = os.getenv('CRON_CONFIG_DIR')
@@ -42,8 +42,10 @@ rendered_autorestic_template = autorestic_template.render(
   backend_configs=generated_backend_configs,
 )
 
-
 os.makedirs(os.path.dirname(path_to_config_file), exist_ok=True)
 config_file = open(path_to_config_file, "w")
 config_file.write(rendered_autorestic_template)
 config_file.close()
+
+for backend_name in backend_names:
+  subprocess.Popen("autorestic exec -b " + backed_name + " -- unlock", shell=True)
