@@ -22,7 +22,7 @@ locations:
 {% if BEFORE_BACKUP_SCRIPT_NAME or DATABASE_NAME or HEALTH_CHECKS_URL %}
         before:
 {% if HEALTH_CHECKS_URL %}
-        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Starting backup for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}/start'
+          - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Starting backup for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}/start'
 {% endif %}
 {% if DATABASE_NAME %}
           - python3 /database.py
@@ -37,7 +37,7 @@ locations:
           - {{ BACKUP_SCRIPT_NAME }} 0
 {% endif %}
 {% if HEALTH_CHECKS_URL %}
-        - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Backup successful for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}'
+          - 'curl -m 10 --retry 5 -H "X-Auth-Token: {{ AUTH_TOKEN }}" -X POST -H "Content-Type: text/plain" --data "Backup successful for location: {{ BACKUP_PATH }}" {{ HEALTH_CHECKS_URL }}'
 {% endif %}
 {% endif %}
 {% if BACKUP_SCRIPT_NAME or HEALTH_CHECKS_URL %}
