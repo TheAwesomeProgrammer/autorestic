@@ -15,6 +15,7 @@ BACKUP_PATH = os.getenv('BACKUP_PATH')
 CRON_SCHEDULE = os.getenv('CRON_SCHEDULE')
 HEALTH_CHECKS_URL = os.getenv('HEALTH_CHECKS_URL')
 AUTH_TOKEN = os.getenv('AUTH_TOKEN')
+DATABASE_NAME = os.getenv('DATABASE_NAME')
 
 path_to_config_file = CONFIG_DIR
 with open(BACKEND_CONFIGS_PATH, 'r') as f:
@@ -40,6 +41,7 @@ rendered_autorestic_template = autorestic_template.render(
   CRON_SCHEDULE=CRON_SCHEDULE,
   HEALTH_CHECKS_URL=HEALTH_CHECKS_URL,
   AUTH_TOKEN=AUTH_TOKEN,
+  DATABASE_NAME=DATABASE_NAME,
   backend_names=backend_names,
   backend_configs=generated_backend_configs,
 )
