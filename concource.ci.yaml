@@ -1,0 +1,42 @@
+#   update ci :update:ci": fly -t ci set-pipeline -p autorestic -c ./concource.ci.yaml
+resources:
+- name: repo
+  type: git
+  icon: github
+  source:
+    uri: https://git.nobleclementine.com/programmerphil/autorestic.git
+    username: ((git/nobleclementine.username))
+    password: ((git/nobleclementine.password))
+- name: autorestic-image
+  type: registry-image
+  icon: docker
+  source:
+    repository: registry.nobleclementine.com/autorestic
+    username: ((registry/nobleclementine.username))
+    password: ((registry/nobleclementine.password))
+    tag: latest
+
+jobs:
+- name: build-autorestic
+  plan:
+  - get: repo
+    trigger: true
+  - task: build-task-image
+    privileged: true
+    config:
+      platform: linux
+      image_resource:
+        type: registry-image
+        source:
+          repository: concourse/oci-build-task
+      inputs:
+      - name: repo
+      outputs:
+      - name: image
+      params:
+        CONTEXT: ./repo
+      run:
+        path: build
+  - put: autorestic-image
+    params:
+      image: image/image.tar
