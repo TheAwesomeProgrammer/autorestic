@@ -16,6 +16,7 @@ COPY secret_template /
 COPY scripts/ /scripts
 COPY crond.sh /crond.sh
 RUN chmod +x /entrypoint.sh /crond.sh /template.py /database.py /scripts/backup-vault.sh /scripts/restore-vault.sh
+RUN apk update
 RUN apk add --no-cache python3 py3-pip postgresql16-client mariadb-client
 RUN pip3 install sh Jinja2
 # show autorestic cron logs in docker
