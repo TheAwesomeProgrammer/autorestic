@@ -1,5 +1,3 @@
-mv /postgres/pgdata/pg_wal /tmp/orig-pg_wal
-rm -rf /postgres/pgdata/*
-cp -a /data/database-basebackup/. /postgres/pgdata/
-chown -R 999:999 /postgres/pgdata/
-chmod -R 700 /postgres/pgdata/
+cp -a /data/database-basebackup/. /postgres/${POSTGRES_DATA_FOLDER}/
+chown -R 999:999 /postgres/${POSTGRES_DATA_FOLDER}/
+chmod -R 700 /postgres/${POSTGRES_DATA_FOLDER}/
